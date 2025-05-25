@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Médias Finais (Lendo de JSON Local)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .table-header th { background-color: #EF4444; color: white; padding: 10px; text-align: center; border: 1px solid #D1D5DB; }
+        .table-cell { padding: 8px; text-align: center; border: 1px solid #D1D5DB; }
+        .input-grade { width: 60px; text-align: center; padding: 4px; border: 1px solid #D1D5DB; border-radius: 4px; }
+        .input-criteria { width: 70px; text-align: center; padding: 4px; border: 1px solid #D1D5DB; border-radius: 4px; margin-left: 8px;}
+        .section-title { font-size: 1.5rem; font-weight: bold; margin-top: 20px; margin-bottom: 10px; color: #374151; }
+        .criteria-card { background-color: #F9FAFB; padding: 16px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom:20px; }
+        .mgp-card { background-color: #E0F2FE; padding: 16px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .status-indicator { padding: 4px 8px; border-radius: 4px; font-weight: bold; text-align: center; }
+        .situacao-aprovado { background-color: #D1FAE5; color: #065F46; }
+        .situacao-exame { background-color: #FEF3C7; color: #92400E; }
+        .situacao-reprovado { background-color: #FEE2E2; color: #991B1B; }
+        .disabled-row td { background-color: #E5E7EB; color: #6B7280; }
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+        input[type=number] { -moz-appearance: textfield; }
+        .info-box { background-color: #FFFBEB; border: 1px solid #FDE68A; color: #92400E; padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 0.9em;}
+    </style>
+</head>
+<body class="bg-gray-100 p-4 md:p-8">
+    <div class="container mx-auto max-w-7xl bg-white p-6 rounded-lg shadow-xl">
+        <h1 class="text-3xl font-bold text-center text-red-600 mb-6">Planilha de Acompanhamento de Notas</h1>
+
+        <div class="info-box">
+            <strong>Modo de Operação:</strong> Esta planilha tentará carregar os dados de um arquivo <code>minhas_notas.json</code> local. Se não encontrar, usará dados salvos no navegador (localStorage) ou, por fim, dados padrão. <br/>
+            As edições feitas aqui são salvas no navegador (localStorage). Para atualizar o arquivo <code>minhas_notas.json</code> (e sincronizar com o Git), você deve editá-lo manualmente.
+        </div>
+
+        <div class="criteria-card mb-6">
+            <h2 class="section-title text-xl">Critérios de Avaliação (Editáveis)</h2>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                <div><label for="pesoCP">Peso CP:</label><input type="number" id="pesoCP" class="input-criteria" step="0.1" onchange="updateCriteriaAndRecalculate()"></div>
+                <div><label for="pesoGS">Peso GS:</label><input type="number" id="pesoGS" class="input-criteria" step="0.1" onchange="updateCriteriaAndRecalculate()"></div>
+                <div><label for="notaMinAprovacao">Mín. Aprovação (MF):</label><input type="number" id="notaMinAprovacao" class="input-criteria" step="0.1" onchange="updateCriteriaAndRecalculate()"></div>
+                <div><label for="presencaMinAprovacao">Mín. Presença (%):</label><input type="number" id="presencaMinAprovacao" class="input-criteria" step="1" onchange="updateCriteriaAndRecalculate()"></div>
+                <div><label for="notaMinExame">Mín. para Exame (MP):</label><input type="number" id="notaMinExame" class="input-criteria" step="0.1" onchange="updateCriteriaAndRecalculate()"></div>
+                <div><label for="pesoMPExame">Peso MP (Exame):</label><input type="number" id="pesoMPExame" class="input-criteria" step="0.1" onchange="updateCriteriaAndRecalculate()"></div>
+                <div><label for="pesoEXAExame">Peso EXA (Exame):</label><input type="number" id="pesoEXAExame" class="input-criteria" step="0.1" onchange="updateCriteriaAndRecalculate()"></div>
+            </div>
+        </div>
+
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200 border border-gray-300">
+                <thead class="table-header">
+                    <tr>
+                        <th rowspan="2">DISCIPLINA</th><th rowspan="2">CH*</th><th colspan="1">1º SEM</th><th colspan="5">2º SEM</th><th colspan="4">RESULTADO ANUAL</th>
+                    </tr>
+                    <tr>
+                        <th>MD</th><th>CP</th><th>GS</th><th>FA</th><th>AULAS</th><th>MD</th><th>PR (%)</th><th>MP</th><th>EXA</th><th>MF</th><th>SITUAÇÃO</th>
+                    </tr>
+                </thead>
+                <tbody id="gradeTableBody" class="bg-white divide-y divide-gray-200 text-sm"></tbody>
+            </table>
+        </div>
+        <p class="text-xs text-gray-600 mt-2">* CH: Carga Horária (MGP)</p>
+
+        <div class="mgp-card mt-6">
+            <h2 class="section-title text-xl">Média Global Ponderada (MGP)</h2>
+            <p class="text-gray-700 text-sm mb-2">Regra: Σ((MF * CH) / Σ(CH)) / 10 (excluindo Nano Courses, etc.)</p>
+            <p class="text-2xl font-bold text-blue-700" id="mgpDisplay">MGP: 0.00</p>
+        </div>
+        <button onclick="clearLocalStorageData()" class="mt-4 bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded text-sm">
+            Limpar Dados Salvos no Navegador (localStorage)
+        </button>
+    </div>
+
+<script>
+    const localStorageKey = 'gradeCalculatorDataFIAP_v3';
+    const localJsonFileName = 'minhas_notas.json';
+
+    const defaultSubjectData = [
+        { id: 1, name: "CÓDIGOS DE ALTA PERFORMANCE", ch: 80, md1: 69, aulas2: 80, cp2: null, gs2: null, fa2: null, exa: null, isMGPRelevant: true },
+        { id: 2, name: "DESIGN E DESENVOLVIMENTO DE BANCOS DE DADOS", ch: 80, md1: 96.6, aulas2: 80, cp2: null, gs2: null, fa2: null, exa: null, isMGPRelevant: true },
+        { id: 3, name: "ENGENHARIA DE SOFTWARE", ch: 80, md1: 91.6, aulas2: 80, cp2: null, gs2: null, fa2: null, exa: null, isMGPRelevant: true },
+        { id: 4, name: "ESTATÍSTICAS PARA SOLUÇÕES EM TI", ch: 80, md1: 70, aulas2: 80, cp2: null, gs2: null, fa2: null, exa: null, isMGPRelevant: true },
+        { id: 5, name: "GESTÃO CORPORATIVA COM TI", ch: 80, md1: 100, aulas2: 80, cp2: null, gs2: null, fa2: null, exa: null, isMGPRelevant: true },
+        { id: 6, name: "NETWORKING FUNDAMENTALS AND SECURITY", ch: 80, md1: 89.6, aulas2: 80, cp2: null, gs2: null, fa2: null, exa: null, isMGPRelevant: true },
+        { id: 7, name: "PROGRAMAÇÃO ORIENTADA A OBJETOS COM JAVA E WEB", ch: 160, md1: 100, aulas2: 160, cp2: null, gs2: null, fa2: null, exa: null, isMGPRelevant: true },
+        { id: 8, name: "NANO COURSES", ch: 160, md1: 90, aulas2: 160, cp2: null, gs2: null, fa2: null, exa: null, isMGPRelevant: false },
+        { id: 9, name: "CYBERSECURITY HACKER SKILLS", ch: 9, md1: 9, aulas2: 9, cp2: null, gs2: null, fa2: null, exa: null, isMGPRelevant: false },
+        { id: 10, name: "LINUX FUNDAMENTOS", ch: 9, md1: 9, aulas2: 9, cp2: null, gs2: null, fa2: null, exa: null, isMGPRelevant: false }
+    ];
+    const defaultCriteria = {
+        pesoCP: 0.4, pesoGS: 0.6, notaMinAprovacao: 6.0, presencaMinAprovacao: 75,
+        notaMinExame: 4.0, pesoMPExame: 0.5, pesoEXAExame: 0.5
+    };
+
+    let currentSubjectData = JSON.parse(JSON.stringify(defaultSubjectData));
+    let currentCriteria = JSON.parse(JSON.stringify(defaultCriteria));
+
+    function saveToLocalStorage() {
+        const dataToSave = { subjects: currentSubjectData, criteria: currentCriteria };
+        localStorage.setItem(localStorageKey, JSON.stringify(dataToSave));
+        console.log("Dados salvos no localStorage.");
+    }
+
+    async function tryLoadFromFile() {
+        try {
+            const response = await fetch(localJsonFileName);
+            if (!response.ok) {
+                console.warn(`${localJsonFileName} não encontrado ou erro HTTP: ${response.status}. Tentando localStorage...`);
+                return false;
+            }
+            const jsonData = await response.json();
+            if (jsonData.subjects) {
+                currentSubjectData = defaultSubjectData.map(defaultSubj => {
+                    const fileSubj = jsonData.subjects.find(s => s.id === defaultSubj.id);
+                    return fileSubj ? { ...defaultSubj, ...fileSubj } : defaultSubj;
+                });
+            }
+            if (jsonData.criteria) {
+                currentCriteria = { ...defaultCriteria, ...jsonData.criteria };
+            }
+            console.log(`Dados carregados de ${localJsonFileName}.`);
+            return true;
+        } catch (error) {
+            console.error(`Erro ao carregar ou processar ${localJsonFileName}:`, error, ". Tentando localStorage...");
+            return false;
+        }
+    }
+
+    function tryLoadFromLocalStorage() {
+        const savedData = localStorage.getItem(localStorageKey);
+        if (savedData) {
+            const parsedData = JSON.parse(savedData);
+            if (parsedData.subjects) {
+                 currentSubjectData = defaultSubjectData.map(defaultSubj => {
+                    const storSubj = parsedData.subjects.find(s => s.id === defaultSubj.id);
+                    return storSubj ? { ...defaultSubj, ...storSubj } : defaultSubj;
+                });
+            }
+            if (parsedData.criteria) {
+                currentCriteria = { ...defaultCriteria, ...parsedData.criteria };
+            }
+            console.log("Dados carregados do localStorage.");
+            return true;
+        }
+        console.log("Nenhum dado no localStorage. Usando dados padrão.");
+        return false;
+    }
+    
+    function applyCriteriaToDOM() {
+        document.getElementById('pesoCP').value = currentCriteria.pesoCP;
+        document.getElementById('pesoGS').value = currentCriteria.pesoGS;
+        document.getElementById('notaMinAprovacao').value = currentCriteria.notaMinAprovacao;
+        document.getElementById('presencaMinAprovacao').value = currentCriteria.presencaMinAprovacao;
+        document.getElementById('notaMinExame').value = currentCriteria.notaMinExame;
+        document.getElementById('pesoMPExame').value = currentCriteria.pesoMPExame;
+        document.getElementById('pesoEXAExame').value = currentCriteria.pesoEXAExame;
+    }
+
+    function updateCriteriaAndRecalculate() {
+        currentCriteria.pesoCP = parseFloat(document.getElementById('pesoCP').value) || defaultCriteria.pesoCP;
+        currentCriteria.pesoGS = parseFloat(document.getElementById('pesoGS').value) || defaultCriteria.pesoGS;
+        currentCriteria.notaMinAprovacao = parseFloat(document.getElementById('notaMinAprovacao').value) || defaultCriteria.notaMinAprovacao;
+        currentCriteria.presencaMinAprovacao = parseFloat(document.getElementById('presencaMinAprovacao').value) || defaultCriteria.presencaMinAprovacao;
+        currentCriteria.notaMinExame = parseFloat(document.getElementById('notaMinExame').value) || defaultCriteria.notaMinExame;
+        currentCriteria.pesoMPExame = parseFloat(document.getElementById('pesoMPExame').value) || defaultCriteria.pesoMPExame;
+        currentCriteria.pesoEXAExame = parseFloat(document.getElementById('pesoEXAExame').value) || defaultCriteria.pesoEXAExame;
+        recalculateAll();
+        saveToLocalStorage();
+    }
+
+    function populateTable() {
+        const tableBody = document.getElementById('gradeTableBody');
+        tableBody.innerHTML = '';
+        currentSubjectData.forEach(subject => {
+            const row = tableBody.insertRow();
+            row.id = `subject-row-${subject.id}`;
+            if (!subject.isMGPRelevant) row.classList.add('disabled-row');
+
+            let cell = row.insertCell(); cell.textContent = subject.name; cell.className = 'table-cell text-left';
+            cell = row.insertCell(); cell.textContent = subject.ch; cell.className = 'table-cell';
+            cell = row.insertCell(); cell.textContent = subject.md1 !== null ? subject.md1.toFixed(1) : '-'; cell.className = 'table-cell';
+            
+            const createInput = (type, id, value, placeholder, min, max, step, onChangeFn) => {
+                const input = document.createElement('input');
+                input.type = type; input.className = 'input-grade'; input.id = id;
+                input.value = value !== null && value !== undefined ? value : '';
+                if (placeholder) input.placeholder = placeholder;
+                if (min !== undefined) input.min = min; if (max !== undefined) input.max = max; if (step !== undefined) input.step = step;
+                input.onchange = onChangeFn;
+                return input;
+            };
+            
+            cell = row.insertCell(); cell.appendChild(createInput('number', `cp2-${subject.id}`, subject.cp2, "Nota", 0, 100, 0.1, () => { subject.cp2 = parseFloat(document.getElementById(`cp2-${subject.id}`).value) || null; recalculateRow(subject.id); })); cell.className = 'table-cell';
+            cell = row.insertCell(); cell.appendChild(createInput('number', `gs2-${subject.id}`, subject.gs2, "Nota", 0, 100, 0.1, () => { subject.gs2 = parseFloat(document.getElementById(`gs2-${subject.id}`).value) || null; recalculateRow(subject.id); })); cell.className = 'table-cell';
+            cell = row.insertCell(); cell.appendChild(createInput('number', `fa2-${subject.id}`, subject.fa2, "Nº", 0, undefined, 1, () => { let val = parseInt(document.getElementById(`fa2-${subject.id}`).value); subject.fa2 = isNaN(val) ? null : val; recalculateRow(subject.id); })); cell.className = 'table-cell';
+            
+            cell = row.insertCell(); cell.textContent = subject.aulas2; cell.className = 'table-cell';
+            cell = row.insertCell(); cell.id = `md2-${subject.id}`; cell.className = 'table-cell font-semibold'; cell.textContent = '-';
+            cell = row.insertCell(); cell.id = `pr2-${subject.id}`; cell.className = 'table-cell font-semibold'; cell.textContent = '-';
+            cell = row.insertCell(); cell.id = `mp-${subject.id}`; cell.className = 'table-cell font-semibold'; cell.textContent = '-';
+            
+            cell = row.insertCell(); cell.appendChild(createInput('number', `exa-${subject.id}`, subject.exa, "Nota", 0, 100, 0.1, () => { subject.exa = parseFloat(document.getElementById(`exa-${subject.id}`).value) || null; recalculateRow(subject.id); })); cell.className = 'table-cell';
+            
+            cell = row.insertCell(); cell.id = `mf-${subject.id}`; cell.className = 'table-cell font-bold'; cell.textContent = '-';
+            cell = row.insertCell(); cell.id = `situacao-${subject.id}`; cell.className = 'table-cell font-bold status-indicator'; cell.textContent = '-';
+        });
+    }
+
+    function recalculateRow(subjectId) {
+        const subject = currentSubjectData.find(s => s.id === subjectId);
+        if (!subject) return;
+        const crit = currentCriteria;
+
+        let md2 = null;
+        if (subject.cp2 !== null && subject.gs2 !== null) {
+            md2 = (subject.cp2 * crit.pesoCP) + (subject.gs2 * crit.pesoGS);
+            document.getElementById(`md2-${subject.id}`).textContent = md2.toFixed(1);
+        } else { document.getElementById(`md2-${subject.id}`).textContent = '-'; }
+
+        let pr2 = null;
+        if (subject.aulas2 > 0 && subject.fa2 !== null && !isNaN(subject.fa2)) {
+            pr2 = Math.max(0, ((subject.aulas2 - subject.fa2) / subject.aulas2) * 100); // Garante que não seja negativo
+            document.getElementById(`pr2-${subject.id}`).textContent = pr2.toFixed(1) + '%';
+        } else { document.getElementById(`pr2-${subject.id}`).textContent = '-'; }
+
+        let mp = null;
+        if (subject.md1 !== null && md2 !== null) {
+            mp = (subject.md1 + md2) / 2;
+            document.getElementById(`mp-${subject.id}`).textContent = mp.toFixed(1);
+        } else { document.getElementById(`mp-${subject.id}`).textContent = '-'; }
+
+        let mf = null;
+        if (mp !== null) {
+            mf = (subject.exa !== null) ? ((mp * crit.pesoMPExame) + (subject.exa * crit.pesoEXAExame)) : mp;
+            document.getElementById(`mf-${subject.id}`).textContent = mf.toFixed(1);
+        } else { document.getElementById(`mf-${subject.id}`).textContent = '-'; }
+        subject.mfCalc = mf;
+
+        const situacaoCell = document.getElementById(`situacao-${subject.id}`);
+        situacaoCell.className = 'table-cell font-bold status-indicator'; // Reset class
+        if (mf !== null && pr2 !== null) {
+            if (mf >= crit.notaMinAprovacao && pr2 >= crit.presencaMinAprovacao) {
+                situacaoCell.textContent = 'Aprovado'; situacaoCell.classList.add('situacao-aprovado');
+            } else if (mf < crit.notaMinAprovacao && mp !== null && mp >= crit.notaMinExame && pr2 >= crit.presencaMinAprovacao) {
+                situacaoCell.textContent = 'Exame'; situacaoCell.classList.add('situacao-exame');
+            } else {
+                situacaoCell.textContent = 'Reprovado'; situacaoCell.classList.add('situacao-reprovado');
+            }
+        } else { situacaoCell.textContent = '-'; }
+        
+        calculateMGP();
+        saveToLocalStorage(); // Salva no localStorage após cada recálculo de linha
+    }
+
+    function recalculateAll() {
+        currentSubjectData.forEach(subject => recalculateRow(subject.id));
+    }
+
+    function calculateMGP() {
+        let somaProdutosMFCH = 0; let somaCH = 0;
+        currentSubjectData.forEach(subject => {
+            if (subject.isMGPRelevant && subject.mfCalc !== null && subject.ch > 0) {
+                somaProdutosMFCH += subject.mfCalc * subject.ch;
+                somaCH += subject.ch;
+            }
+        });
+        let mgp = (somaCH > 0) ? (somaProdutosMFCH / somaCH) / 10 : 0;
+        document.getElementById('mgpDisplay').textContent = `MGP: ${mgp.toFixed(2)}`;
+    }
+
+    function clearLocalStorageData() {
+        if (confirm("Tem certeza que deseja limpar os dados salvos no navegador (localStorage)? Isso não afetará seu arquivo 'minhas_notas.json'.")) {
+            localStorage.removeItem(localStorageKey);
+            currentSubjectData = JSON.parse(JSON.stringify(defaultSubjectData)); // Reseta para o padrão interno
+            currentCriteria = JSON.parse(JSON.stringify(defaultCriteria));
+            applyCriteriaToDOM();
+            populateTable();
+            recalculateAll(); // Recalcula com os dados padrão
+            console.log("Dados do localStorage limpos. Usando dados padrão ou do arquivo 'minhas_notas.json' no próximo carregamento.");
+        }
+    }
+
+    window.onload = async () => {
+        let loadedFromFile = await tryLoadFromFile();
+        if (!loadedFromFile) {
+            tryLoadFromLocalStorage(); // Tenta localStorage se o arquivo falhar
+        }
+        // Se ambos falharem, currentSubjectData e currentCriteria já estão com os defaults
+        applyCriteriaToDOM();
+        populateTable();
+        recalculateAll();
+    };
+</script>
+</body>
+</html>

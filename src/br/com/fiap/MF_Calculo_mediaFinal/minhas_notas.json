@@ -1,0 +1,23 @@
+{
+  "criteria": {
+    "pesoCP": 0.4,
+    "pesoGS": 0.6,
+    "notaMinAprovacao": 6.0,
+    "presencaMinAprovacao": 75,
+    "notaMinExame": 4.0,
+    "pesoMPExame": 0.5,
+    "pesoEXAExame": 0.5
+  },
+  "subjects": [
+    { "id": 1, "name": "CÓDIGOS DE ALTA PERFORMANCE", "ch": 80, "md1": 69, "aulas2": 80, "cp2": 75, "gs2": 85, "fa2": 2, "exa": null, "isMGPRelevant": true, "mfCalc": null },
+    { "id": 2, "name": "DESIGN E DESENVOLVIMENTO DE BANCOS DE DADOS", "ch": 80, "md1": 96.6, "aulas2": 80, "cp2": null, "gs2": null, "fa2": 0, "exa": null, "isMGPRelevant": true, "mfCalc": null },
+    { "id": 3, "name": "ENGENHARIA DE SOFTWARE", "ch": 80, "md1": 91.6, "aulas2": 80, "cp2": null, "gs2": null, "fa2": null, "exa": null, "isMGPRelevant": true, "mfCalc": null },
+    { "id": 4, "name": "ESTATÍSTICAS PARA SOLUÇÕES EM TI", "ch": 80, "md1": 70, "aulas2": 80, "cp2": null, "gs2": null, "fa2": null, "exa": null, "isMGPRelevant": true, "mfCalc": null },
+    { "id": 5, "name": "GESTÃO CORPORATIVA COM TI", "ch": 80, "md1": 100, "aulas2": 80, "cp2": null, "gs2": null, "fa2": null, "exa": null, "isMGPRelevant": true, "mfCalc": null },
+    { "id": 6, "name": "NETWORKING FUNDAMENTALS AND SECURITY", "ch": 80, "md1": 89.6, "aulas2": 80, "cp2": null, "gs2": null, "fa2": null, "exa": null, "isMGPRelevant": true, "mfCalc": null },
+    { "id": 7, "name": "PROGRAMAÇÃO ORIENTADA A OBJETOS COM JAVA E WEB", "ch": 160, "md1": 100, "aulas2": 160, "cp2": null, "gs2": null, "fa2": null, "exa": null, "isMGPRelevant": true, "mfCalc": null },
+    { "id": 8, "name": "NANO COURSES", "ch": 160, "md1": 90, "aulas2": 160, "cp2": null, "gs2": null, "fa2": null, "exa": null, "isMGPRelevant": false, "mfCalc": null },
+    { "id": 9, "name": "CYBERSECURITY HACKER SKILLS", "ch": 9, "md1": 9, "aulas2": 9, "cp2": null, "gs2": null, "fa2": null, "exa": null, "isMGPRelevant": false, "mfCalc": null },
+    { "id": 10, "name": "LINUX FUNDAMENTOS", "ch": 9, "md1": 9, "aulas2": 9, "cp2": null, "gs2": null, "fa2": null, "exa": null, "isMGPRelevant": false, "mfCalc": null }
+  ]
+}
