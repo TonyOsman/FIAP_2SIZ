@@ -152,6 +152,7 @@ public class arvoreAVLint {
         }
         return p;
     }
+
     public NO atualizaAlturaBalanceamento (NO p) {
         /*atualiza informação da altura de cada nó depois da remoção percorre a árvore usando percurso pós-ordem para ajustar primeiro os nós folhas (profundidade maior) e depois os níveis acima */
         if( p != null) {

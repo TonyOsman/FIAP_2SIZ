@@ -1,5 +1,7 @@
 package br.com.fiap.codigoAltaPerformance.EstruturaDados.MetodosOrdenacao;
 
+import java.util.Random;
+
 public class QuickSort {
 
 

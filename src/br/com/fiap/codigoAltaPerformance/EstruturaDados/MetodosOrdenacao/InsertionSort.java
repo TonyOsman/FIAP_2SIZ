@@ -1,5 +1,7 @@
 package br.com.fiap.codigoAltaPerformance.EstruturaDados.MetodosOrdenacao;
 
+import java.util.Random;
+
 public class InsertionSort {
 
     public static final int N = 10;
@@ -32,7 +34,7 @@ public class InsertionSort {
     public static void insertionSort(int vetor[]) {
         int comparacoes = 0, trocas=0;
         int eleito, j, i;
-        for(i = 1; i <N; i++) {
+        for(i = 1; i < N ; i++) {
             eleito = vetor[i];
             j = i-1;
             comparacoes++;
@@ -47,6 +49,5 @@ public class InsertionSort {
 
         System.out.println("Numero de Trocas: "+ trocas);
         System.out.println("Numero de Comparacoes: "+ comparacoes);
-    }
 
-}
+}}
