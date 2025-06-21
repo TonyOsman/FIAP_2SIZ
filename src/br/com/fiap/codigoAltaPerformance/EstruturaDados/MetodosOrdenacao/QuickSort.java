@@ -9,6 +9,7 @@ public class QuickSort {
     public static int trocas = 0;
 
     public static final int N = 10;
+
     public static void main(String[] args) {
 
 
@@ -17,12 +18,13 @@ public class QuickSort {
         int vetor[] = new int[N];
         int i;
         Random gerador = new Random();
+
+
         System.out.println("Criando vetor com "+ N + " elementos: ");
         for(i = 0; i <N; i++) {
             vetor[i] = gerador.nextInt(50000);
-            System.out.print(vetor[i]+"  ");
+            System.out.println(i+". "+ vetor[i]+"  ");
         }
-        System.out.println();
 
         System.out.println("Ordenando o vetor com Quicksort... ");
         quickSort(vetor,0, N-1);
@@ -32,14 +34,9 @@ public class QuickSort {
         System.out.println("\n*********** Vetor Ordenado *********");
         for(i = 0; i <N; i++)
             System.out.println(i +"\t"+ vetor[i]);
-
-        System.out.println("Ordenando o vetor com Quicksort... ");
-        quickSort(vetor,0, N-1);
-        System.out.println("\n\nTrocas efetuadas: "+ trocas+ "\nComparacoes realizadas: "+ comparacoes);
-
     }
 
-    public static int particiona (int x[], int li, int ls)
+    public static int particiona (int x[], int li, int ls) //recebe um vetor (que será organizado,indice de inicio, e indice de fim)
     {
         int pivo,abaixo,temp,acima;
         pivo=x[ls];
@@ -69,14 +66,13 @@ public class QuickSort {
         return acima;
     }
 
-
-    public static void quickSort(int x[],int li,int ls)
-    {
+    public static void quickSort(int x[],int li,int ls) { //recebe um vetor (que será organizado,indice de inicio, e indice de fim)
         int j;
-        if (li<ls){
-            j = particiona(x, li, ls);
-            quickSort(x, li, j-1);
-            quickSort(x, j+1,ls);
+        if (li<ls){ //só faz algo se tiver mais de um elemento no vetor
+            j = particiona(x, li, ls); //pede para o metodo particiona para reorganizar o vetor e devolver.
+            //chama si mesmo duas vezes para ordenar os subvetores
+            quickSort(x, li, j-1);//chama o quicksort para a parte esquerda do pivô
+            quickSort(x, j+1,ls);//chama o quicksort para a parte direita do pivô
         }
     }
 

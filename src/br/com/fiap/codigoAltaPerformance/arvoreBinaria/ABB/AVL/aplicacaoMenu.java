@@ -18,6 +18,7 @@ public class aplicacaoMenu {
             switch (opcao) {
                 case 0:
                     System.out.println("Encerrado");
+                    avl.mostraEmOrdem(avl.root);
                     break;
                 case 1:
                     System.out.print("Informe valor:");
