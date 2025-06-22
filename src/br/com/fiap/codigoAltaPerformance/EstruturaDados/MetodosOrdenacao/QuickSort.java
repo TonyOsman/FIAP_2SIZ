@@ -12,17 +12,12 @@ public class QuickSort {
 
     public static void main(String[] args) {
 
-
-        /*cria a estrutura de dados (vetor) com N elementos  gera vetor fora de ordem*/
-
-        int vetor[] = new int[N];
+        int vetor[] = new int[] {1621,4291,3553,4691,3039,2684,3277,2378,3256,2985};
         int i;
-        Random gerador = new Random();
 
 
         System.out.println("Criando vetor com "+ N + " elementos: ");
         for(i = 0; i <N; i++) {
-            vetor[i] = gerador.nextInt(50000);
             System.out.println(i+". "+ vetor[i]+"  ");
         }
 
@@ -36,20 +31,20 @@ public class QuickSort {
             System.out.println(i +"\t"+ vetor[i]);
     }
 
-    public static int particiona (int x[], int li, int ls) //recebe um vetor (que será organizado,indice de inicio, e indice de fim)
+    public static int particiona (int x[], int li, int ls)
     {
         int pivo,abaixo,temp,acima;
-        pivo=x[ls];
-        acima=ls;
-        abaixo=li;
-        while(abaixo<acima)
+        pivo=x[ls]; //2985 | x[ls] = vetor[9] = 2985
+        acima=ls; // acima = 2985
+        abaixo=li; // 1621 | x[li] = vetor[0] = 1621
+        while(abaixo<acima) //positivo
         {
-            comparacoes++;
-            while(x[abaixo]<pivo && abaixo<ls) {
-                abaixo++;
-                comparacoes++;
+            comparacoes++; //++
+            while(x[abaixo]<pivo && abaixo<ls) { // enquanto(1621<2985 && 1621<2985)
+                abaixo++; //abaixo == x[1] == 4291
+                comparacoes++; //==1
             }
-            while (x[acima]>=pivo && acima > abaixo) {
+            while (x[acima]>=pivo && acima > abaixo) { //enquanto(2985>=2985 && 2985 > 4291)
                 comparacoes++;
                 acima--;
             }
@@ -63,16 +58,15 @@ public class QuickSort {
         trocas++;
         x[ls]=x[acima];
         x[acima]=pivo;
-        return acima;
+        return acima; // retorno o pivôt para que o quick saiba onde a divisão aconteceu para
     }
 
-    public static void quickSort(int x[],int li,int ls) { //recebe um vetor (que será organizado,indice de inicio, e indice de fim)
+    public static void quickSort(int x[],int li,int ls) { // vetor[], 0, 9
         int j;
-        if (li<ls){ //só faz algo se tiver mais de um elemento no vetor
-            j = particiona(x, li, ls); //pede para o metodo particiona para reorganizar o vetor e devolver.
-            //chama si mesmo duas vezes para ordenar os subvetores
-            quickSort(x, li, j-1);//chama o quicksort para a parte esquerda do pivô
-            quickSort(x, j+1,ls);//chama o quicksort para a parte direita do pivô
+        if (li<ls){
+            j = particiona(x, li, ls); // j = particiona(vetor[], 0, 9);
+            quickSort(x, li, j-1);
+            quickSort(x, j+1,ls);
         }
     }
 

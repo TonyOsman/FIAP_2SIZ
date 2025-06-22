@@ -4,23 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6a6a51a2-5209-4a60-86fb-69b49dd4ab3d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/praticaExame/AVL1/aplicaoMenu.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/praticaExame/AVL1/arvoreAVLint.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/praticaExame/FIAP/métodosOrdenação/BubbleSort.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/praticaExame/FIAP/métodosOrdenação/InsertionSort.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="6a6a51a2-5209-4a60-86fb-69b49dd4ab3d" name="Changes" comment="ok">
+      <change afterPath="$PROJECT_DIR$/src/br/com/fiap/codigoAltaPerformance/filaEncadeada/filaEncadeada.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/praticaExame/simulado/AVLregiao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/praticaExame/simulado/Regiao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/praticaExame/simulado/interfaceUser.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/br/com/fiap/codigoAltaPerformance/EstruturaDados/MetodosOrdenacao/BubbleSort.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/br/com/fiap/codigoAltaPerformance/EstruturaDados/MetodosOrdenacao/BubbleSort.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/br/com/fiap/codigoAltaPerformance/EstruturaDados/MetodosOrdenacao/InsertionSort.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/br/com/fiap/codigoAltaPerformance/EstruturaDados/MetodosOrdenacao/InsertionSort.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/br/com/fiap/codigoAltaPerformance/EstruturaDados/MetodosOrdenacao/QuickSort.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/br/com/fiap/codigoAltaPerformance/EstruturaDados/MetodosOrdenacao/QuickSort.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/br/com/fiap/codigoAltaPerformance/EstruturaDados/MetodosOrdenacao/quicksort_webPage" beforeDir="false" afterPath="$PROJECT_DIR$/src/br/com/fiap/codigoAltaPerformance/EstruturaDados/MetodosOrdenacao/quicksort_webPage" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/br/com/fiap/codigoAltaPerformance/arvoreBinaria/ABB/AVL/aplicacaoMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/br/com/fiap/codigoAltaPerformance/arvoreBinaria/ABB/AVL/aplicacaoMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/praticaExame/AVL1/aplicaoMenu.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/praticaExame/AVL1/arvoreAVLint.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/praticaExame/FIAP/métodosOrdenação/BubbleSort.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/praticaExame/FIAP/métodosOrdenação/InsertionSort.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExportToHTMLSettings">
+    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/../FIAP_2SIZ\exportToHTML" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -46,11 +48,12 @@
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/TonyOsman/FIAP_2SIZ.git&quot;,
-    &quot;accountId&quot;: &quot;dac7843c-4e88-4dcf-8953-c447148b2a97&quot;
+    &quot;accountId&quot;: &quot;f570d8f7-812e-4056-b84d-0bd524273867&quot;
   }
 }</component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/src/br/com/fiap/codigoAltaPerformance/arvoreBinaria/ABB/ABBint.java" root0="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/src/praticaExame/simulado/AVLregiao.java" root0="SKIP_INSPECTION" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 2
@@ -66,6 +69,7 @@
     "Application.InsertionSort.executor": "Run",
     "Application.QuickSort.executor": "Run",
     "Application.aplicacaoMenu.executor": "Run",
+    "Application.interfaceUserPilha.executor": "Run",
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
@@ -115,8 +119,19 @@
       <workItem from="1750119240968" duration="2549000" />
       <workItem from="1750255812238" duration="405000" />
       <workItem from="1750256237954" duration="23187000" />
-      <workItem from="1750373260464" duration="28369000" />
+      <workItem from="1750373260464" duration="28393000" />
+      <workItem from="1750521467437" duration="5907000" />
+      <workItem from="1750531307154" duration="15169000" />
     </task>
+    <task id="LOCAL-00001" summary="ok">
+      <option name="closed" value="true" />
+      <created>1750481449238</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1750481449238</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -146,7 +161,8 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <option name="LAST_COMMIT_MESSAGE" value="" />
+    <MESSAGE value="ok" />
+    <option name="LAST_COMMIT_MESSAGE" value="ok" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
